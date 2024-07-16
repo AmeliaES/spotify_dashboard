@@ -47,7 +47,16 @@ fig
 
 # ----------------------------------
 # Save our new data frame as a csv
-data.to_csv('data/extended_streaming_Sept2020-Nov2023.csv', index = False)
+
+# Subset to only columns we need and remove potentially personally sensitive data (eg. IP address, type of browser etc.)
+data = data[['date', 
+'ts', 
+'ms_played', 
+'master_metadata_track_name', 
+'master_metadata_album_artist_name',
+'spotify_track_uri']]
+
+data.to_csv('extended_streaming_Sept2020-Nov2023.csv', index = False)
 
 # ----------------------------------
 # Create the histogram with conditional coloring

@@ -1,6 +1,3 @@
-# Run this app with `python app.py` and
-# visit http://127.0.0.1:8050/ in your web browser.
-
 from dash import Dash, html, dcc, Input, Output
 import dash_bootstrap_components as dbc
 import plotly.express as px
@@ -9,8 +6,9 @@ import simplejson as json
 
 app = Dash(__name__, external_stylesheets=[dbc.themes.MINTY])
 
+# ------------------------------------
 # Load in data
-data = pd.read_csv('data/extended_streaming_Sept2020-Nov2023.csv')
+data = pd.read_csv('extended_streaming_Sept2020-Nov2023.csv')
 
 # Convert date time column into two separate columns "date" and "time"
 data['ts'] = pd.to_datetime(data['ts'])
@@ -75,7 +73,9 @@ fig_top_artists = px.bar(df_summary,
              title=f"Top 20 Artists (between Sept 2020 and Nov 2023)",
              labels={'master_metadata_album_artist_name': 'Artist', 'hours': 'Hours Played'})
 
-
+# ------------------------------------
+# CALLBACKS
+# ------------------------------------
 # Callback to update plots based on date range slider
 @app.callback(
     Output('fig_histogram', 'figure'),
@@ -122,6 +122,9 @@ def update_plots(selected_dates):
     
     return filtered_histogram, filtered_top_artists
 
+# ------------------------------------
+# LAYOUT
+# ------------------------------------
 # Define app layout
 app.layout = html.Div([
     html.Div(["Spotify Streaming History"], className = "h1 text-center mt-5 mb-3"),
@@ -144,6 +147,7 @@ app.layout = html.Div([
     ], className="d-flex justify-content-center")
 ])
 
+# ------------------------------------
 # Run the app
 if __name__ == '__main__':
     app.run_server(debug=True)
