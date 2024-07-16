@@ -52,9 +52,23 @@ def get_date_from_slider_value(slider_value):
 
 
 # Histogram plot
-fig_histogram = px.histogram(data, 
-                    x='date', 
-                    title='Number of Songs Played Over Time')
+df_hist = (data
+    .groupby('year-month')
+    .size()
+    .reset_index(name = 'count')
+    .sort_values(by='year-month'))
+
+
+fig_histogram = px.bar(df_hist, 
+            x='year-month', 
+            y='count', 
+            title="Total number of songs played each month",
+            labels={'year-month': 'Month', 'count': 'Number of songs'})
+
+fig_histogram.update_xaxes(tickangle=45)
+
+fig_histogram.update_xaxes(tickmode='array', tickvals=df_hist['year-month'],
+                 ticktext=df_hist['year-month'])
 
 # Plot of top 20 artists listened to (based on streaming hours)
 df_summary = (data
@@ -90,10 +104,23 @@ def update_plots(selected_dates):
     end_date = get_date_from_slider_value(end_date_num)
     
     # Update histogram plot
-    filtered_histogram = px.histogram(data[(data['date'] >= start_date) & (data['date'] <= end_date)], 
-                                      x='date', 
-                                      title='Number of Songs Played Over Time')
-    
+    df_hist = (data[(data['date'] >= start_date) & (data['date'] <= end_date)]
+    .groupby('year-month')
+    .size()
+    .reset_index(name = 'count')
+    .sort_values(by='year-month'))
+
+    filtered_histogram = px.bar(df_hist, 
+                x='year-month', 
+                y='count', 
+                title="Total number of songs played each month",
+                labels={'year-month': 'Month', 'count': 'Number of songs'})
+
+    filtered_histogram.update_xaxes(tickangle=45)
+
+    filtered_histogram.update_xaxes(tickmode='array', tickvals=df_hist['year-month'],
+                    ticktext=df_hist['year-month'])
+
     # Update top artists plot
     filtered_summary = (data[(data['date'] >= start_date) & (data['date'] <= end_date)]
                         .groupby('master_metadata_album_artist_name')['ms_played'].sum()
@@ -128,7 +155,7 @@ def update_plots(selected_dates):
 # Define app layout
 app.layout = html.Div([
     html.Div(["Spotify Streaming History"], className = "h1 text-center mt-5 mb-3"),
-    html.Div(["Analysis of my personal Spotify data from Sept 2020 to October 2023."], className = "h6 text-center mb-3"),
+    html.Div(["Analysis of my personal Spotify data from Sept 2020 to October 2023. Please move the slider to explore different date ranges."], className = "h6 text-center mb-3"),
     html.Div([
         dcc.RangeSlider(
         id='date-slider',

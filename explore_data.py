@@ -88,8 +88,8 @@ fig.update_layout(xaxis_title='Date',
 # Come back to making the bins one week in size... not quite there yet I dont think.
 
 # Instead just change the x-axis limits to only show data between those two dates
-date_range_start = pd.to_datetime('2022-05-01').date()
-date_range_end = pd.to_datetime('2022-06-01').date()
+date_range_start = pd.to_datetime('2021-05-01').date()
+date_range_end = pd.to_datetime('2023-06-01').date()
 
 fig = px.histogram(data, 
                     x='date', 
@@ -216,3 +216,26 @@ def get_date_from_slider_value(slider_value):
 get_date_from_slider_value(1)
 # date_range_start = get_date_from_slider_value(start_date)
 # date_range_end = get_date_from_slider_value(end_date)
+
+# ----------------------------------
+# Let's also update the histogram to do a count based on the year-month 
+df_hist = (data[(data['date'] >= date_range_start) & (data['date'] <= date_range_end)]
+    .groupby('year-month')
+    .size()
+    .reset_index(name = 'count')
+    .sort_values(by='year-month'))
+
+df_hist
+
+fig = px.bar(df_hist, 
+            x='year-month', 
+            y='count', 
+            title="Total number of songs played each month",
+            labels={'year-month': 'Month', 'count': 'Number of songs'})
+
+fig
+
+fig.update_xaxes(tickangle=45)
+
+fig.update_xaxes(tickmode='array', tickvals=df_hist['year-month'],
+                 ticktext=df_hist['year-month'])
