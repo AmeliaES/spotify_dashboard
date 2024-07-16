@@ -41,11 +41,20 @@ data['year-month'] = data['ts'].dt.strftime('%Y-%m')
 # turn that into a date (last day of that year-month)
 # and that date should be in the format of eg. pd.to_datetime('2022-06-01').date()
 
-def get_date_from_slider_value(slider_value):
+def get_date_from_slider_value_start(slider_value):
     year_month = date_range_dictionary.get(slider_value)
     if year_month:
         # Get the last day of the month
         end_of_month = pd.to_datetime(year_month) + pd.offsets.MonthBegin(0)
+        return end_of_month.date()  # Return date object
+    else:
+        return None  # Handle case where slider_value doesn't exist in dictionary
+
+def get_date_from_slider_value_end(slider_value):
+    year_month = date_range_dictionary.get(slider_value)
+    if year_month:
+        # Get the last day of the month
+        end_of_month = pd.to_datetime(year_month) + pd.offsets.MonthEnd(0)
         return end_of_month.date()  # Return date object
     else:
         return None  # Handle case where slider_value doesn't exist in dictionary
@@ -100,8 +109,8 @@ def update_plots(selected_dates):
     start_date_num = selected_dates[0]
     end_date_num = selected_dates[1]
 
-    start_date = get_date_from_slider_value(start_date_num)
-    end_date = get_date_from_slider_value(end_date_num)
+    start_date = get_date_from_slider_value_start(start_date_num)
+    end_date = get_date_from_slider_value_end(end_date_num)
     
     # Update histogram plot
     df_hist = (data[(data['date'] >= start_date) & (data['date'] <= end_date)]

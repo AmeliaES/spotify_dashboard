@@ -204,7 +204,7 @@ data['year-month'] = data['ts'].dt.strftime('%Y-%m')
 # turn that into a date (last day of that year-month)
 # and that date should be in the format of eg. pd.to_datetime('2022-06-01').date()
 
-def get_date_from_slider_value(slider_value):
+def get_date_from_slider_value_start(slider_value):
     year_month = date_range_dictionary.get(slider_value)
     if year_month:
         # Get the last day of the month
@@ -213,7 +213,17 @@ def get_date_from_slider_value(slider_value):
     else:
         return None  # Handle case where slider_value doesn't exist in dictionary
 
-get_date_from_slider_value(1)
+def get_date_from_slider_value_end(slider_value):
+    year_month = date_range_dictionary.get(slider_value)
+    if year_month:
+        # Get the last day of the month
+        end_of_month = pd.to_datetime(year_month) + pd.offsets.MonthEnd(0)
+        return end_of_month.date()  # Return date object
+    else:
+        return None  # Handle case where slider_value doesn't exist in dictionary
+
+get_date_from_slider_value_start(1)
+get_date_from_slider_value_end(1)
 # date_range_start = get_date_from_slider_value(start_date)
 # date_range_end = get_date_from_slider_value(end_date)
 
