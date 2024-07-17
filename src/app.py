@@ -5,6 +5,7 @@ import pandas as pd
 import simplejson as json
 
 app = Dash(__name__, external_stylesheets=[dbc.themes.MINTY])
+server = app.server
 
 # ------------------------------------
 # Load in data
@@ -188,4 +189,3 @@ app.layout = html.Div([
 if __name__ == '__main__':
     app.run_server(debug=True)
 
-server = app.server
