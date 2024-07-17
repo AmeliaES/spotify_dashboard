@@ -4,7 +4,7 @@ Analysis of my personal Spotify data from Sept 2020 to Oct 2023. Presented on a 
 
 To see the app in action please visit [https://spotify-dashboard-rfba.onrender.com/](https://spotify-dashboard-rfba.onrender.com/).
 
-![assets/images/landing_page.png](assets/images/landing_page.png)
+![src/assets/images/landing_page.png](src/assets/images/landing_page.png)
 
 ## Useful links I found when doing this project:
 - [https://dash-bootstrap-components.opensource.faculty.ai/docs/components/layout/](https://dash-bootstrap-components.opensource.faculty.ai/docs/components/layout/)
