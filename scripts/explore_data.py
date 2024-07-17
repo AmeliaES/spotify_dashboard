@@ -1,3 +1,5 @@
+# This script creates the data used in src/app.py
+
 import pandas as pd
 import simplejson as json
 import glob
@@ -56,7 +58,7 @@ data = data[['date',
 'master_metadata_album_artist_name',
 'spotify_track_uri']]
 
-data.to_csv('extended_streaming_Sept2020-Nov2023.csv', index = False)
+data.to_csv('src/extended_streaming_Sept2020-Nov2023.csv', index = False)
 
 # ----------------------------------
 # Create the histogram with conditional coloring
