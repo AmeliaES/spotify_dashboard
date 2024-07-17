@@ -227,13 +227,14 @@ app.layout = dbc.Container([
 
             dcc.Graph(id='fig_histogram', figure=fig_histogram)
 
-        ]),
+        ], xs=12, sm=12, md=12, lg=6, xl=6
+        ),
 
         dbc.Col([
 
             dcc.Graph(id='fig_top_artists', figure=fig_top_artists)
 
-        ])
+        ], xs=12, sm=12, md=12, lg=6, xl=6)
 
     ], className = 'm-3')
 
