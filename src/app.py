@@ -4,7 +4,7 @@ import plotly.express as px
 import pandas as pd
 import simplejson as json
 
-app = Dash(__name__, external_stylesheets=[dbc.themes.MINTY],
+app = Dash(__name__, external_stylesheets=[dbc.themes.LUMEN],
             meta_tags=[{'name': 'viewport',
                         'content': 'width=device-width, initial-scale=1.0'}])
 
@@ -136,6 +136,8 @@ def update_plots(selected_dates):
     filtered_histogram.update_xaxes(tickmode='array', tickvals=df_hist['year-month'],
                     ticktext=df_hist['year-month'])
 
+    filtered_histogram.update_layout(margin=dict(l=30, r=30, t=60, b=30))
+
     # Update top artists plot
     filtered_summary = (data[(data['date'] >= start_date) & (data['date'] <= end_date)]
                         .groupby('master_metadata_album_artist_name')['ms_played'].sum()
@@ -151,6 +153,8 @@ def update_plots(selected_dates):
                                   x='hours', 
                                   title=f"Top 20 Artists (between {start_date} and {end_date})",
                                   labels={'master_metadata_album_artist_name': 'Artist', 'hours': 'Hours Played'})
+    
+    filtered_top_artists.update_layout(margin=dict(l=30, r=30, t=10, b=60))
 
     # Customize layout and style
     filtered_top_artists.update_layout(
@@ -168,42 +172,17 @@ def update_plots(selected_dates):
 # LAYOUT
 # ------------------------------------
 # Define app layout
-# app.layout = html.Div([
-#     html.Div(["Spotify Streaming History"], className = "h1 text-center mt-5 mb-3"),
-#     html.Div(["Analysis of my personal Spotify data from Sept 2020 to October 2023. Please move the slider to explore different date ranges."], className = "h6 text-center mb-3"),
-#     html.Div([
-#         dcc.RangeSlider(
-#         id='date-slider',
-#         marks={k: {'label': v, 'style': {'transform': 'rotate(45deg)', 'white-space': 'nowrap', 'margin-top': '10px'}} for k, v in date_range_dictionary.items()},
-#         step=None,
-#         min=min(date_range_dictionary.keys()),
-#         max=max(date_range_dictionary.keys()),
-#         value=[min(date_range_dictionary.keys()), max(date_range_dictionary.keys())],
-#         allowCross = False
-#         )
-#     ], style={'width': '75%'},
-#     className = 'm-5'),
-#     html.Div([
-#     html.Div([dcc.Graph(id='fig_histogram', figure=fig_histogram)], className = "ms-5 me-3 border w-50 inline-block"),
-#     html.Div([dcc.Graph(id='fig_top_artists', figure=fig_top_artists)], className = "ms-3 me-5 border w-50 inline-block")
-#     ], className="d-flex justify-content-center")
-# ])
 
 app.layout = dbc.Container([
 
     dbc.Row(
-        dbc.Col(html.H1("Spotify Streaming History", 
-                        className = "text-center m-3"),
-                width = 12)
+        dbc.Col([
+            html.H1("Spotify Streaming History"),
+            html.H5(["Analysis of my personal Spotify data from Sept 2020 to Oct 2023.",html.Br(),"Please move the sliders to different months to explore different date ranges."])
+        ], 
+        className = "text-center p-3 ms-2 me-2 bg-primary bg-opacity-10",
+        width = 12)
     ),
-
-    dbc.Row([
-
-        dbc.Col([html.H5(["Analysis of my personal Spotify data from Sept 2020 to Oct 2023.",html.Br(),"Please move the sliders to different months to explore different data ranges."],
-                        className = "text-center mb-3")
-        ], width = 12)
-
-    ]),
 
     dbc.Row([
 
@@ -219,7 +198,7 @@ app.layout = dbc.Container([
             )
         ], className = 'mb-5')
 
-    ]),
+    ], className = 'm-5'),
 
     dbc.Row([
 
@@ -236,16 +215,9 @@ app.layout = dbc.Container([
 
         ], xs=12, sm=12, md=12, lg=6, xl=6)
 
-    ], className = 'm-3')
+    ], className = 'm-5')
 
-])
-
-
-
-
-    # ([dcc.Graph(id='fig_histogram', figure=fig_histogram)], className = "ms-5 me-3 border w-50 inline-block")
-    # ([dcc.Graph(id='fig_top_artists', figure=fig_top_artists)], className = "ms-3 me-5 border w-50 inline-block")], className="")
-
+], fluid=True)
 
 # ------------------------------------
 # Run the app
