@@ -9,6 +9,7 @@ To see the app in action please visit [https://spotify-dashboard-rfba.onrender.c
 ## Useful links I found when doing this project:
 - [https://dash-bootstrap-components.opensource.faculty.ai/docs/components/layout/](https://dash-bootstrap-components.opensource.faculty.ai/docs/components/layout/)
 - [https://css-tricks.com/snippets/css/a-guide-to-flexbox/#flexbox-background](https://css-tricks.com/snippets/css/a-guide-to-flexbox/#flexbox-background)
+- [https://hellodash.pythonanywhere.com/](https://hellodash.pythonanywhere.com/)
 
 ## Notes 
 ### On layout:
