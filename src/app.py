@@ -14,7 +14,8 @@ server = app.server
 
 # ------------------------------------
 # Load in data
-data = pd.read_csv('extended_streaming_Sept2020-Nov2023.csv')
+# data = pd.read_csv('extended_streaming_Sept2020-Nov2023.csv')
+data = pd.read_csv('src/extended_streaming_Sept2020-Nov2023.csv')
 
 # Convert date time column into two separate columns "date" and "time"
 data['ts'] = pd.to_datetime(data['ts'])
@@ -73,17 +74,19 @@ df_hist = (data
     .reset_index(name = 'count')
     .sort_values(by='year-month'))
 
+df_hist['month-year'] = pd.to_datetime(df_hist['year-month']).dt.strftime('%b %Y')
+
 
 fig_histogram = px.bar(df_hist, 
-            x='year-month', 
+            x='month-year', 
             y='count', 
             title="Total number of songs played each month",
-            labels={'year-month': 'Month', 'count': 'Number of songs'})
+            labels={'month-year': 'Month', 'count': 'Number of songs'})
 
 fig_histogram.update_xaxes(tickangle=45)
 
-fig_histogram.update_xaxes(tickmode='array', tickvals=df_hist['year-month'],
-                 ticktext=df_hist['year-month'])
+fig_histogram.update_xaxes(tickmode='array', tickvals=df_hist['month-year'],
+                 ticktext=df_hist['month-year'])
 
 # Plot of top 20 artists listened to (based on streaming hours)
 df_summary = (data
@@ -125,16 +128,18 @@ def update_plots(selected_dates):
     .reset_index(name = 'count')
     .sort_values(by='year-month'))
 
+    df_hist['month-year'] = pd.to_datetime(df_hist['year-month']).dt.strftime('%b %Y')
+
     filtered_histogram = px.bar(df_hist, 
-                x='year-month', 
+                x='month-year', 
                 y='count', 
                 title="Total number of songs played each month",
-                labels={'year-month': 'Month', 'count': 'Number of songs'})
+                labels={'month-year': 'Month', 'count': 'Number of songs'})
 
     filtered_histogram.update_xaxes(tickangle=45)
 
-    filtered_histogram.update_xaxes(tickmode='array', tickvals=df_hist['year-month'],
-                    ticktext=df_hist['year-month'])
+    filtered_histogram.update_xaxes(tickmode='array', tickvals=df_hist['month-year'],
+                    ticktext=df_hist['month-year'])
 
     filtered_histogram.update_layout(margin=dict(l=30, r=30, t=60, b=30))
 
@@ -194,7 +199,10 @@ app.layout = dbc.Container([
                 min=min(date_range_dictionary.keys()),
                 max=max(date_range_dictionary.keys()),
                 value=[min(date_range_dictionary.keys()), max(date_range_dictionary.keys())],
-                allowCross = False
+                allowCross = False #,
+                # tooltip={"always_visible": True,
+                #         "placement": "top",
+                #         "style": {'font-size' : '20px'}}
             )
         ], className = 'mb-5')
 
