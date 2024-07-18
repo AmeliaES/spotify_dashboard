@@ -33,11 +33,23 @@ date_range_df = pd.DataFrame({
     'index': range(1, len(pd.date_range(start=min_date, end=max_date, freq='ME')) + 1)
 })
 
-date_range_df['year-month'] = date_range_df['date'].dt.strftime('%Y-%m')
+date_range_df['month-year'] = date_range_df['date'].dt.strftime('%b %Y')
 
-date_range_dictionary = dict(zip(date_range_df['index'], date_range_df['year-month']))
+date_range_dictionary = dict(zip(date_range_df['index'], date_range_df['month-year']))
 
-# Use "date_range_dictionary" in the  dcc.RangeSlider
+date_range_dictionary_slider = {}
+
+# Iterate through the items of the existing dictionary
+keys = list(date_range_dictionary.keys())
+values = list(date_range_dictionary.values())
+
+for i, key in enumerate(keys):
+    if i == 0 or i == len(keys) - 1 or (i + 1) % 3 == 0:  # First, last, and every 3rd value
+        date_range_dictionary_slider[key] = values[i]
+    else:
+        date_range_dictionary_slider[key] = ''
+
+# Use "date_range_dictionary_slider" in the  dcc.RangeSlider
 
 # add a column to our data frame called month_year
 data['year-month'] = data['ts'].dt.strftime('%Y-%m')
@@ -102,8 +114,11 @@ df_summary['hours'] = round(df_summary['total']/(1000*60*60), 2)
 fig_top_artists = px.bar(df_summary, 
              y='master_metadata_album_artist_name', 
              x='hours', 
-             title=f"Top 20 Artists (between Sept 2020 and Nov 2023)",
+             title=f"Top 20 Artists",
              labels={'master_metadata_album_artist_name': 'Artist', 'hours': 'Hours Played'})
+
+
+dateRangeText = ""
 
 # ------------------------------------
 # CALLBACKS
@@ -112,6 +127,7 @@ fig_top_artists = px.bar(df_summary,
 @app.callback(
     Output('fig_histogram', 'figure'),
     Output('fig_top_artists', 'figure'),
+    Output('dateRangeText', 'children'),
     Input('date-slider', 'value')
 )
 def update_plots(selected_dates):
@@ -156,7 +172,7 @@ def update_plots(selected_dates):
     filtered_top_artists = px.bar(filtered_summary, 
                                   y='master_metadata_album_artist_name', 
                                   x='hours', 
-                                  title=f"Top 20 Artists (between {start_date} and {end_date})",
+                                  title=f"Top 20 Artists",
                                   labels={'master_metadata_album_artist_name': 'Artist', 'hours': 'Hours Played'})
     
     filtered_top_artists.update_layout(margin=dict(l=30, r=30, t=10, b=60))
@@ -170,8 +186,16 @@ def update_plots(selected_dates):
     # Explicitly label every tick on the y-axis
     filtered_top_artists.update_yaxes(tickmode='array', tickvals=filtered_summary['master_metadata_album_artist_name'],
                     ticktext=filtered_summary['master_metadata_album_artist_name'])
+
     
-    return filtered_histogram, filtered_top_artists
+    # Create text for date range
+    start_date_month_year = start_date.strftime('%b %Y')
+
+    end_date_month_year = end_date.strftime('%b %Y')
+
+    dateRangeText_update = f"Showing data selected between {start_date_month_year} and {end_date_month_year}"
+    
+    return filtered_histogram, filtered_top_artists, dateRangeText_update
 
 # ------------------------------------
 # LAYOUT
@@ -194,19 +218,24 @@ app.layout = dbc.Container([
         dbc.Col([
             dcc.RangeSlider(
                 id='date-slider',
-                marks={k: {'label': v, 'style': {'transform': 'rotate(45deg)', 'white-space': 'nowrap', 'margin-top': '10px', 'font-size' : '20px'}} for k, v in date_range_dictionary.items()},
+                marks={k: {'label': v, 'style': {'transform': 'rotate(45deg)', 'white-space': 'nowrap', 'margin-top': '10px', 'font-size' : '20px'}} for k, v in date_range_dictionary_slider.items()},
                 step=None,
-                min=min(date_range_dictionary.keys()),
-                max=max(date_range_dictionary.keys()),
-                value=[min(date_range_dictionary.keys()), max(date_range_dictionary.keys())],
-                allowCross = False #,
-                # tooltip={"always_visible": True,
-                #         "placement": "top",
-                #         "style": {'font-size' : '20px'}}
+                min=min(date_range_dictionary_slider.keys()),
+                max=max(date_range_dictionary_slider.keys()),
+                value=[min(date_range_dictionary_slider.keys()), max(date_range_dictionary_slider.keys())],
+                allowCross = False 
             )
         ], className = 'mb-5')
 
-    ], className = 'm-5'),
+    ], className = 'mt-5 me-5 ms-5 mb-3'),
+
+    dbc.Row([
+
+        dbc.Col([
+            html.H4(id = 'dateRangeText')
+        ], className = 'text-center p-3 fw-bold text-primary')
+
+    ]),
 
     dbc.Row([
 
@@ -223,7 +252,7 @@ app.layout = dbc.Container([
 
         ], xs=12, sm=12, md=12, lg=6, xl=6)
 
-    ], className = 'm-5')
+    ], className = 'mt-3 me-5 ms-5 mb-5')
 
 ], fluid=True)
 
