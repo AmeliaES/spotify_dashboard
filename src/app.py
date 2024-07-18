@@ -14,8 +14,8 @@ server = app.server
 
 # ------------------------------------
 # Load in data
-#data = pd.read_csv('extended_streaming_Sept2020-Nov2023.csv')
-data = pd.read_csv('src/extended_streaming_Sept2020-Nov2023.csv')
+data = pd.read_csv('extended_streaming_Sept2020-Nov2023.csv')
+#data = pd.read_csv('src/extended_streaming_Sept2020-Nov2023.csv')
 
 # Convert date time column into two separate columns "date" and "time"
 data['ts'] = pd.to_datetime(data['ts'])
