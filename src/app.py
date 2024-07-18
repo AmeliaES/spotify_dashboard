@@ -14,8 +14,8 @@ server = app.server
 
 # ------------------------------------
 # Load in data
-# data = pd.read_csv('extended_streaming_Sept2020-Nov2023.csv')
-data = pd.read_csv('src/extended_streaming_Sept2020-Nov2023.csv')
+data = pd.read_csv('extended_streaming_Sept2020-Nov2023.csv')
+# data = pd.read_csv('src/extended_streaming_Sept2020-Nov2023.csv')
 
 # Convert date time column into two separate columns "date" and "time"
 data['ts'] = pd.to_datetime(data['ts'])
@@ -118,11 +118,6 @@ fig_histogram = px.bar(df_hist,
             labels={'month-year': 'Month', 'count': 'Number of songs'},
             template = 'custom')
 
-fig_histogram.update_xaxes(tickangle=45)
-
-fig_histogram.update_xaxes(tickmode='array', tickvals=df_hist['month-year'],
-                 ticktext=df_hist['month-year'])
-
 # Plot of top 20 artists listened to (based on streaming hours)
 df_summary = (data
     .groupby('master_metadata_album_artist_name')
@@ -137,7 +132,7 @@ df_summary['hours'] = round(df_summary['total']/(1000*60*60), 2)
 fig_top_artists = px.bar(df_summary, 
              y='master_metadata_album_artist_name', 
              x='hours', 
-             labels={'master_metadata_album_artist_name': 'Artist', 'hours': 'Hours Played'},
+             labels={'master_metadata_album_artist_name': 'Artist', 'hours': 'Hours streamed'},
              template = 'custom')
 
 # ------------------------------------
@@ -193,7 +188,7 @@ def update_plots(selected_dates):
     filtered_top_artists = px.bar(filtered_summary, 
                                   y='master_metadata_album_artist_name', 
                                   x='hours', 
-                                  labels={'master_metadata_album_artist_name': 'Artist', 'hours': 'Hours Played'},
+                                  labels={'master_metadata_album_artist_name': 'Artist', 'hours': 'Hours Streamed'},
                                   template = 'custom')
     
     filtered_top_artists.update_layout(margin=dict(b=112))
@@ -208,9 +203,10 @@ def update_plots(selected_dates):
 
     end_date_month_year = end_date.strftime('%b %Y')
 
-    dateRangeText_update = f"Showing data selected between {start_date_month_year} and {end_date_month_year}"
+    dateRangeText_update = f"{start_date_month_year} - {end_date_month_year}"
     
     return filtered_histogram, filtered_top_artists, dateRangeText_update
+
 
 # ------------------------------------
 # LAYOUT
@@ -219,14 +215,22 @@ def update_plots(selected_dates):
 
 app.layout = dbc.Container([
 
-    dbc.Row(
+    dbc.Row([
         dbc.Col([
             html.H1("Spotify Streaming History"),
-            html.H5(["Analysis of my personal Spotify data from Sept 2020 to Oct 2023.",html.Br(),"Please move the sliders to different months to explore different date ranges."])
         ], 
-        className = "text-center p-3 ms-2 me-2 bg-primary bg-opacity-10",
+        className = "text-center pt-3 ms-2 me-2 bg-primary bg-opacity-10",
+        width = 12)
+    ]),
+
+    dbc.Row(
+        dbc.Col([
+            html.H5(["Analysis of my personal Spotify data.",html.Br(),"Please move the sliders to different months to explore different date ranges."])
+        ], 
+        className = "text-center pb-3 ms-2 me-2 bg-primary bg-opacity-10",
         width = 12)
     ),
+
 
     dbc.Row([
 
@@ -242,13 +246,13 @@ app.layout = dbc.Container([
             )
         ], className = 'mb-5')
 
-    ], className = 'mt-5 me-5 ms-5 mb-3'),
+    ], className = 'mt-3 me-5 ms-5'),
 
     dbc.Row([
 
         dbc.Col([
             html.H4(id = 'dateRangeText')
-        ], className = 'text-center p-3 fw-bold text-primary',width = 12)
+        ], className = 'text-center p-3 fw-bold text-primary border-bottom',width = 12)
 
     ]),
 
@@ -269,7 +273,21 @@ app.layout = dbc.Container([
 
         ], xs=12, sm=12, md=12, lg=6, xl=6)
 
-    ], className = 'me-5 ms-5 mb-5')
+    ], className = 'me-5 ms-5 mb-1 mt-2'),
+
+    dbc.Row([
+
+        dbc.Col([
+
+            dbc.Button(['About me'], 
+            href = "https://ameliaes.github.io/"
+            , className="me-md-2"),
+
+            dbc.Button(['My GitHub'], 
+            href = "https:www.github.com/ameliaes")
+
+        ]),
+    ], className = 'gap-2 d-flex justify-content-end')
 
 ], fluid=True)
 
