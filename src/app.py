@@ -14,8 +14,8 @@ server = app.server
 
 # ------------------------------------
 # Load in data
-data = pd.read_csv('extended_streaming_Sept2020-Nov2023.csv')
-#data = pd.read_csv('src/extended_streaming_Sept2020-Nov2023.csv')
+# data = pd.read_csv('extended_streaming_Sept2020-Nov2023.csv')
+data = pd.read_csv('src/extended_streaming_Sept2020-Nov2023.csv')
 
 # Convert date time column into two separate columns "date" and "time"
 data['ts'] = pd.to_datetime(data['ts'])
@@ -255,19 +255,8 @@ app.layout = dbc.Container([
     dbc.Row([
 
         dbc.Col([
-            html.H5("Number of songs streamed each month")
-        ], xs=12, sm=12, md=12, lg=6, xl=6),
 
-        dbc.Col([
-            html.H5("Top 20 artists")
-        ], xs=12, sm=12, md=12, lg=6, xl=6)
-
-    ],className = 'text-center fw-bold'),
-
-    dbc.Row([
-
-        dbc.Col([
-
+            html.H5(["Number of songs streamed each month"], className = 'text-center'),
             dcc.Graph(id='fig_histogram', figure=fig_histogram)
 
         ], xs=12, sm=12, md=12, lg=6, xl=6
@@ -275,6 +264,7 @@ app.layout = dbc.Container([
 
         dbc.Col([
 
+            html.H5(["Top 20 artists"], className = 'text-center'),
             dcc.Graph(id='fig_top_artists', figure=fig_top_artists)
 
         ], xs=12, sm=12, md=12, lg=6, xl=6)
