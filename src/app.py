@@ -3,7 +3,6 @@ import dash_bootstrap_components as dbc
 import plotly.express as px
 import plotly.io as plt_io
 import pandas as pd
-import simplejson as json
 
 app = Dash(__name__, external_stylesheets=[dbc.themes.LUMEN],
             meta_tags=[{'name': 'viewport',
@@ -15,8 +14,8 @@ server = app.server
 
 # ------------------------------------
 # Load in data
-data = pd.read_csv('extended_streaming_Sept2020-Nov2023.csv')
-# data = pd.read_csv('src/extended_streaming_Sept2020-Nov2023.csv')
+#data = pd.read_csv('extended_streaming_Sept2020-Nov2023.csv')
+data = pd.read_csv('src/extended_streaming_Sept2020-Nov2023.csv')
 
 # Convert date time column into two separate columns "date" and "time"
 data['ts'] = pd.to_datetime(data['ts'])
@@ -249,9 +248,21 @@ app.layout = dbc.Container([
 
         dbc.Col([
             html.H4(id = 'dateRangeText')
-        ], className = 'text-center p-3 fw-bold text-primary')
+        ], className = 'text-center p-3 fw-bold text-primary',width = 12)
 
     ]),
+
+    dbc.Row([
+
+        dbc.Col([
+            html.H5("Number of songs streamed each month")
+        ], xs=12, sm=12, md=12, lg=6, xl=6),
+
+        dbc.Col([
+            html.H5("Top 20 artists")
+        ], xs=12, sm=12, md=12, lg=6, xl=6)
+
+    ],className = 'text-center fw-bold'),
 
     dbc.Row([
 
@@ -268,7 +279,7 @@ app.layout = dbc.Container([
 
         ], xs=12, sm=12, md=12, lg=6, xl=6)
 
-    ], className = 'mt-3 me-5 ms-5 mb-5')
+    ], className = 'me-5 ms-5 mb-5')
 
 ], fluid=True)
 
