@@ -1,6 +1,7 @@
 from dash import Dash, html, dcc, Input, Output
 import dash_bootstrap_components as dbc
 import plotly.express as px
+import plotly.io as plt_io
 import pandas as pd
 import simplejson as json
 
@@ -14,8 +15,8 @@ server = app.server
 
 # ------------------------------------
 # Load in data
-# data = pd.read_csv('extended_streaming_Sept2020-Nov2023.csv')
-data = pd.read_csv('src/extended_streaming_Sept2020-Nov2023.csv')
+data = pd.read_csv('extended_streaming_Sept2020-Nov2023.csv')
+# data = pd.read_csv('src/extended_streaming_Sept2020-Nov2023.csv')
 
 # Convert date time column into two separate columns "date" and "time"
 data['ts'] = pd.to_datetime(data['ts'])
@@ -78,7 +79,30 @@ def get_date_from_slider_value_end(slider_value):
     else:
         return None  # Handle case where slider_value doesn't exist in dictionary
 
+# ------------------------------------
+# Create custom theme for plots
 
+plt_io.templates["custom"] = plt_io.templates["ggplot2"]
+
+# plt_io.templates["custom"]['layout']['paper_bgcolor'] = '#b2b1ad'
+plt_io.templates["custom"]['layout']['plot_bgcolor'] = '#f0f0ef'
+
+plt_io.templates['custom']['layout']['yaxis']['gridcolor'] = '#ffffff'
+plt_io.templates['custom']['layout']['xaxis']['gridcolor'] = '#ffffff'
+
+plt_io.templates['custom']['layout']['colorway'] = ['#56B4E9','#E69F00',  '#CC79A7', '#92d134', '#F0E442', '#0072B2', '#D55E00']
+
+plt_io.templates['custom']['layout']['font']['size'] = 16
+plt_io.templates['custom']['layout']['xaxis']['tickfont']['size'] = 13
+plt_io.templates['custom']['layout']['yaxis']['tickfont']['size'] = 13
+
+plt_io.templates['custom']['layout']['margin']['l'] = 20
+plt_io.templates['custom']['layout']['margin']['b'] = 20
+plt_io.templates['custom']['layout']['margin']['t'] = 20
+plt_io.templates['custom']['layout']['margin']['r'] = 20
+plt_io.templates['custom']['layout']['margin']['pad'] = 3
+
+# ------------------------------------
 # Histogram plot
 df_hist = (data
     .groupby('year-month')
@@ -92,8 +116,8 @@ df_hist['month-year'] = pd.to_datetime(df_hist['year-month']).dt.strftime('%b %Y
 fig_histogram = px.bar(df_hist, 
             x='month-year', 
             y='count', 
-            title="Total number of songs played each month",
-            labels={'month-year': 'Month', 'count': 'Number of songs'})
+            labels={'month-year': 'Month', 'count': 'Number of songs'},
+            template = 'custom')
 
 fig_histogram.update_xaxes(tickangle=45)
 
@@ -114,10 +138,10 @@ df_summary['hours'] = round(df_summary['total']/(1000*60*60), 2)
 fig_top_artists = px.bar(df_summary, 
              y='master_metadata_album_artist_name', 
              x='hours', 
-             title=f"Top 20 Artists",
-             labels={'master_metadata_album_artist_name': 'Artist', 'hours': 'Hours Played'})
+             labels={'master_metadata_album_artist_name': 'Artist', 'hours': 'Hours Played'},
+             template = 'custom')
 
-
+# ------------------------------------
 dateRangeText = ""
 
 # ------------------------------------
@@ -149,15 +173,13 @@ def update_plots(selected_dates):
     filtered_histogram = px.bar(df_hist, 
                 x='month-year', 
                 y='count', 
-                title="Total number of songs played each month",
-                labels={'month-year': 'Month', 'count': 'Number of songs'})
+                labels={'month-year': 'Month', 'count': 'Number of songs'},
+                template = 'custom')
 
     filtered_histogram.update_xaxes(tickangle=45)
 
     filtered_histogram.update_xaxes(tickmode='array', tickvals=df_hist['month-year'],
                     ticktext=df_hist['month-year'])
-
-    filtered_histogram.update_layout(margin=dict(l=30, r=30, t=60, b=30))
 
     # Update top artists plot
     filtered_summary = (data[(data['date'] >= start_date) & (data['date'] <= end_date)]
@@ -172,16 +194,10 @@ def update_plots(selected_dates):
     filtered_top_artists = px.bar(filtered_summary, 
                                   y='master_metadata_album_artist_name', 
                                   x='hours', 
-                                  title=f"Top 20 Artists",
-                                  labels={'master_metadata_album_artist_name': 'Artist', 'hours': 'Hours Played'})
+                                  labels={'master_metadata_album_artist_name': 'Artist', 'hours': 'Hours Played'},
+                                  template = 'custom')
     
-    filtered_top_artists.update_layout(margin=dict(l=30, r=30, t=10, b=60))
-
-    # Customize layout and style
-    filtered_top_artists.update_layout(
-        # Add title and adjust margins
-        margin=dict(l=100, r=20, t=50, b=20),  # Adjust margins as needed
-   )
+    filtered_top_artists.update_layout(margin=dict(b=112))
 
     # Explicitly label every tick on the y-axis
     filtered_top_artists.update_yaxes(tickmode='array', tickvals=filtered_summary['master_metadata_album_artist_name'],
