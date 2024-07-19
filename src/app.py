@@ -3,6 +3,8 @@ import dash_bootstrap_components as dbc
 import plotly.express as px
 import plotly.io as plt_io
 import pandas as pd
+from dotenv import load_dotenv
+import os
 
 app = Dash(__name__, external_stylesheets=[dbc.themes.LUMEN],
             meta_tags=[{'name': 'viewport',
@@ -13,9 +15,14 @@ app._favicon = ('images/favicon.ico')
 server = app.server
 
 # ------------------------------------
+# Load environment variables from .env
+load_dotenv()
+
+# Get the CSV file path from environment variable, with a default fallback
+data_path = os.getenv('DATA_PATH')
+
 # Load in data
-data = pd.read_csv('extended_streaming_Sept2020-Nov2023.csv')
-# data = pd.read_csv('src/extended_streaming_Sept2020-Nov2023.csv')
+data = pd.read_csv(data_path)
 
 # Convert date time column into two separate columns "date" and "time"
 data['ts'] = pd.to_datetime(data['ts'])
