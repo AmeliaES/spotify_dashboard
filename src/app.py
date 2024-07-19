@@ -220,7 +220,9 @@ def update_plots(selected_dates):
 # ------------------------------------
 # Define app layout
 
-app.layout = dbc.Container([
+app.layout = html.Div([
+
+dbc.Container([
 
     dbc.Row([
         dbc.Col([
@@ -282,22 +284,45 @@ app.layout = dbc.Container([
 
     ], className = 'me-5 ms-5 mb-1 mt-2'),
 
-    dbc.Row([
+    ], fluid = True),
 
-        dbc.Col([
+    # Footer
+    html.Footer([
+        html.Div([
+            html.A("About", href="https://ameliaes.github.io/", style={'marginRight': '15px', 'textDecoration': 'none', 'color': '#007bff'}),
+            html.A("GitHub", href="https://github.com/ameliaes/", style={'marginRight': '15px', 'textDecoration': 'none', 'color': '#007bff'}),
+            html.A("LinkedIn", href="https://www.linkedin.com/in/ameliaes/", style={'marginRight': '15px', 'textDecoration': 'none', 'color': '#007bff'}),
+            html.A("Blog", href="https://ameliaes.github.io/posts/", style={'marginRight': '15px', 'textDecoration': 'none', 'color': '#007bff'}),
+            html.A("Email", href="mailto:amelia1024k@gmail.com", style={'textDecoration': 'none', 'color': '#007bff'}),
+            html.Div([
+                "Created by Amelia Edmondson-Stait using Python Dash. ",
+                "Licensed under the ",
+                    html.A(
+                    "MIT License",
+                    href="https://github.com/AmeliaES/spotify_dashboard/blob/main/LICENSE",
+                    style={'color': '#007bff', 'textDecoration': 'none'}
+                    ),
+                "."
+            ], style={'color': '#6c757d', 'textAlign': 'center'})
+        ],style={'textAlign': 'center'}
+        )
+    ],style={
+        'backgroundColor': '#f8f9fa',
+        'padding': '20px 0',
+        'borderTop': '1px solid #e7e7e7',
+        'width': '100%',
+        'textAlign': 'center',
+        'marginTop': 'auto'  # Push the footer to the bottom
+            }
+    )
 
-            dbc.Button(['About me'], 
-            href = "https://ameliaes.github.io/"
-            , className="me-md-2"),
-
-            dbc.Button(['My GitHub'], 
-            href = "https:www.github.com/ameliaes")
-
-        ]),
-    ], className = 'gap-2 d-flex justify-content-end')
-
-], fluid=True)
-
+],
+    style={
+        'display': 'flex',
+        'flexDirection': 'column',
+        'minHeight': '100vh',  # Full viewport height
+    }
+)
 # ------------------------------------
 # Run the app
 if __name__ == '__main__':
