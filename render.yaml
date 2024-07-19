@@ -12,4 +12,4 @@ services:
       - key: PYTHON_VERSION
         value: 3.10.0
       - key: DATA_PATH
-        value: src/data/extended_streaming_Sept2020-Nov2023.csv
+        value: 'src/data/extended_streaming_Sept2020-Nov2023.csv'

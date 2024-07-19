@@ -19,7 +19,7 @@ server = app.server
 load_dotenv()
 
 # Get the CSV file path from environment variable, with a default fallback
-data_path = os.getenv('DATA_PATH')
+data_path = os.environ.get('DATA_PATH')
 
 # Load in data
 data = pd.read_csv(data_path)
