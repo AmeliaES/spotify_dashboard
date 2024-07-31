@@ -9,7 +9,7 @@ import plotly.express as px
 data_list = []
 
 # Use glob to find all JSON files in the specified directory
-for filename in glob.glob('data/Streaming_History_Audio_*.json'):
+for filename in glob.glob('src/data/Streaming_History_Audio_*.json'):
     with open(filename, 'r') as f:
         data = json.load(f)
         data_list.append(pd.json_normalize(data))
@@ -38,7 +38,7 @@ fig
 # Zooming in on the figure it looks like data from August 2020 is when Spotify use increased.
 # Let's filter the data to keep anything after August 2020 
 
-data = data.loc[(data['date'] >= pd.to_datetime('2020-09-01').date()) & (data['date'] < pd.to_datetime('2023-11-01').date())]
+data = data.loc[(data['date'] >= pd.to_datetime('2020-09-01').date()) & (data['date'] < pd.to_datetime('2024-07-01').date())]
 
 fig = px.histogram(data, 
                     x='date', 
@@ -58,7 +58,7 @@ data = data[['date',
 'master_metadata_album_artist_name',
 'spotify_track_uri']]
 
-data.to_csv('src/extended_streaming_Sept2020-Nov2023.csv', index = False)
+data.to_csv('src/data/extended_streaming_Sept2020-Jun2024.csv', index = False)
 
 # ----------------------------------
 # Create the histogram with conditional coloring

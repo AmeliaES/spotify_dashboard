@@ -18,7 +18,7 @@ server = app.server
 # Load environment variables from .env
 load_dotenv()
 
-# Get the CSV file path from environment variable, with a default fallback
+# Get the CSV file path from environment variable
 data_path = os.environ.get('DATA_PATH')
 
 # Load in data
