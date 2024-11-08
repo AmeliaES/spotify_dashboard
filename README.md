@@ -2,7 +2,7 @@
 
 Analysis of my personal Spotify data from Sept 2020 to Oct 2023. Presented on a Python Dash application.
 
-To see the app in action please visit [https://spotify-dashboard-rfba.onrender.com/](https://spotify-dashboard-rfba.onrender.com/).
+To see the app in action please visit [https://spotify-dashboard-rfba.onrender.com/](https://spotify-dashboard-rfba.onrender.com/). (Please note this takes a while to load as I'm hosting it on Render using a free tier account).
 
 ![src/assets/images/landing_page.png](src/assets/images/landing_page.png)
 
